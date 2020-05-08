@@ -6,44 +6,19 @@ import java.util.Vector;
 
 public class Page extends JFrame {
 
-    private Vector<Vector<String>> rowData;
-    private JTable table;
+    // 屏幕分辨率
+    public static final int SCREEN_HEIGHT;
+    public static final int SCREEN_WIDTH;
 
-    public Page(){
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JScrollPane center = new JScrollPane();
-
-        rowData = new Vector<>();
-        Vector<String> columnName = new Vector<>();
-
-        rowData.addElement(new Vector<>());
-        rowData.firstElement().add("0");
-
-        columnName.add("Number");
-
-        table = new JTable(rowData, columnName);
-        center.setViewportView(table);
-
-        getContentPane().add(center, BorderLayout.CENTER);
-
-        setSize(300, 300);
+    static{
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        SCREEN_HEIGHT = toolkit.getScreenSize().height;
+        SCREEN_WIDTH = toolkit.getScreenSize().width;
     }
 
-    public void showPage(){
-        setVisible(true);
-
-        new Thread(() -> {
-            for(int i = 0; i < 100; i++){
-                rowData.firstElement().setElementAt( String.valueOf(i), 0);
-                table.repaint();
-
-                try{
-                    Thread.sleep(300);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    public Page(){
+        super("GamePage");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocation(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     }
 }
