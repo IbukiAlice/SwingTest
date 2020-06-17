@@ -24,6 +24,14 @@ public class Player {
 
 	private Triple defence;// 防御
 
+	public boolean judgeDeath() {
+		return currentHealth <= 0;
+	}
+
+	public void reduceCurrentHealth(int realDamage){
+		currentHealth -= realDamage;
+	}
+
 	// 当前生命
 	private int currentHealth;
 
@@ -37,7 +45,7 @@ public class Player {
 	}
 
 	// 从玩家数据中获取数据
-	public void initData(){
+	private void initData(){
 		strength = playerData.getStrength();
 		agile = playerData.getAgile();
 		endurance = playerData.getEndurance();
@@ -110,6 +118,14 @@ public class Player {
 		}
 
 		return (int) Math.ceil(realDamage);
+	}
+
+	public int getSpeed() {
+		return speed.getValue();
+	}
+
+	public int getDamage(){
+		return damage.getValue();
 	}
 }
 
