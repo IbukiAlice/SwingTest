@@ -26,6 +26,9 @@ public class Battle {
 				int damage = player.hitJudge(enemy.getDamage(), false);
 				player.reduceCurrentHealth(damage);
 
+				System.out.println("Enemy damage:" + damage +
+					"---Player:" + player.getCurrentHealth() + "/" + player.getHealth());
+
 				if(player.judgeDeath()){
 					// 玩家失败
 					return false;
@@ -38,6 +41,9 @@ public class Battle {
 			}else{
 				int damage = enemy.hitJudge(player.getDamage(), false);
 				enemy.reduceCurrentHealth(damage);
+
+				System.out.println("Player damage:" + damage +
+					"---Enemy:" + enemy.getCurrentHealth() + "/" + enemy.getHealth());
 
 				if(enemy.judgeDeath()){
 					// 玩家胜利

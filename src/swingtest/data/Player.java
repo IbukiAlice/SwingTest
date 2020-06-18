@@ -32,6 +32,14 @@ public class Player {
 		currentHealth -= realDamage;
 	}
 
+	public int getCurrentHealth(){
+		return currentHealth;
+	}
+
+	public int getHealth(){
+		return health.getValue();
+	}
+
 	// 当前生命
 	private int currentHealth;
 
@@ -55,6 +63,8 @@ public class Player {
 		dodge = new Triple(playerData.getDodge());
 		health = new Triple(playerData.getHealth());
 		defence = new Triple(playerData.getDefence());
+
+		currentHealth = health.getValue();
 	}
 
 	/**
