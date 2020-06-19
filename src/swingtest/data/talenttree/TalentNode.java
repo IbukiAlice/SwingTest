@@ -1,4 +1,4 @@
-package swingtest.data;
+package swingtest.data.talenttree;
 
 import java.util.Random;
 
@@ -7,11 +7,13 @@ import java.util.Random;
  */
 public class TalentNode {
 
-	private boolean isAvailable;	// 指示当前节点是否被点亮
+	private boolean available;	// 指示当前节点是否被点亮
 
-	private long currentExp;		// 当前经验值(显示时比上总经验值再换算成百分比)
+	private boolean fullExp;		// 指示当前节点是否满级
 
-	private long totalExp;			// 总经验值
+	private int currentExp;		// 当前经验值(显示时比上总经验值再换算成百分比)
+
+	private int totalExp;			// 总经验值
 
 	private int lvUpSpeed;			// 升级速度(100为基础值, 获得经验值先*升级速度/100再加到当前经验值上)
 									// 升级速度的数值由根骨决定
@@ -27,10 +29,13 @@ public class TalentNode {
 	 * @param treeLevel	天赋树深度
 	 */
 	public TalentNode(int[] talent, int treeLevel){
-		isAvailable = false;
+		available = false;
+		fullExp = false;
 
 		Random r = new Random();
 		effects = new int[8];
+
+		final String[] propertyNames = {"力量", "敏捷", "体力", "攻击", "速度", "闪避", "生命上限", "防御"};
 
 		// 设置每种属性的概率
 		int[] effectPredict = new int[8];
@@ -60,6 +65,9 @@ public class TalentNode {
 		// 设置属性值
 		effects[targetPos] = (targetPos == 6 ? 5 : 1) * (targetPos > 2 ? 2 : 1) * treeLevel;
 
+		StringBuilder builder = new StringBuilder();
+		builder.append(propertyNames[targetPos]).append("增加").append(effects[targetPos]);
+
 		// 设置升级速度
 		final int[] targetPosToLvSpeed = {0, 1, 2, 0, 1, 1, 0, 2};
 		if(targetPos == 6){
@@ -85,10 +93,40 @@ public class TalentNode {
 
 			// 设置属性值
 			effects[targetPos] = (targetPos == 6 ? 5 : 1) * (targetPos > 2 ? 2 : 1) * treeLevel / 3;
+
+			builder.append("【第二属性:").append(propertyNames[targetPos]).append("增加")
+				.append(effects[targetPos]).append("】");
 		}
 
 		// 设置经验值相关
 		currentExp = 0;
-		totalExp = ((int)Math.pow(treeLevel, 1.5)) * 37 + 31;
+		totalExp = (int)(Math.pow(treeLevel, 1.5) * 37 + 31);
+
+		intro = builder.toString();
 	}
+
+	/**
+	 * 增加经验值
+	 * @param exp 经验值
+	 * @return 溢出经验值
+	 */
+	protected int addExp(int exp){
+		currentExp += (exp * lvUpSpeed / 100);
+
+		fullExp = currentExp >= totalExp;
+
+		return fullExp ? currentExp - totalExp : 0;
+	}
+
+	protected boolean isAvailable(){
+		return available;
+	}
+
+	protected boolean isFullExp(){return fullExp;}
+
+	protected void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	protected int[] getEffects(){return effects;}
 }

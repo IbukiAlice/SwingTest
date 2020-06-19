@@ -1,13 +1,17 @@
 package swingtest.data;
 
 
+import swingtest.data.talenttree.TalentTree;
+
+import java.util.Random;
+
 /**
  * 玩家数据(非战斗状态下的数据)
  */
 public class PlayerData {
 
 	// 根骨(除非特殊情况，否则不会发生变化)
-	private int[] talent;	// 根骨(天赋), 数值代表百分比, 表示三维成长速度
+	private int[] talent;	// 根骨(天赋), 数值代表百分比, 表示三维成长速度(三者之和为300)
 
 	// 三维属性
 	private int strength;	// 力量(1力1血1伤)
@@ -32,6 +36,30 @@ public class PlayerData {
 
 	public PlayerData(){
 
+		// 初始化根骨
+		talent = new int[3];
+		Random r = new Random();
+
+		int totalTalent = 300;	// 根骨总和为300
+
+		talent[0] = r.nextInt(totalTalent - 2) + 1;	// 限定范围1~298
+		totalTalent -= talent[0];
+		talent[1] = r.nextInt(totalTalent - 1) + 1;
+		totalTalent -= talent[1];
+		talent[2] = r.nextInt(totalTalent) + 1;
+
+		talentTree = new TalentTree(talent);
+
+		// 初始化属性(根据根骨)
+		strength = 1 + talent[0] / 10;
+		agile = 1 + talent[1] / 10;
+		endurance = 1 + talent[2] / 10;
+
+		additionDamage = 0;
+		additionSpeed = 0;
+		additionDodge = 0;
+		additionHealth = 0;
+		additionDefence = 0;
 	}
 
 	//----- Method -----
