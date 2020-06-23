@@ -76,8 +76,8 @@ public class TalentNode {
 			lvUpSpeed = talent[targetPosToLvSpeed[targetPos]];
 		}
 
-		// 第二属性是否开启
-		if(r.nextInt(10) == 0){
+		// 第二属性是否开启(根据根骨分布均匀程度来决定)
+		if(r.nextInt(100) <= (int) Math.pow(talent[0] * talent[1] * talent[2], 1.0 / 3)){
 
 			// 去掉第一属性
 			target = r.nextInt(1200 - effectPredict[targetPos]);
@@ -92,7 +92,7 @@ public class TalentNode {
 			}
 
 			// 设置属性值
-			effects[targetPos] = (targetPos == 6 ? 5 : 1) * (targetPos > 2 ? 2 : 1) * treeLevel / 3;
+			effects[targetPos] = 1 + (targetPos == 6 ? 5 : 1) * (targetPos > 2 ? 2 : 1) * treeLevel / 2;
 
 			builder.append("【第二属性:").append(propertyNames[targetPos]).append("增加")
 				.append(effects[targetPos]).append("】");

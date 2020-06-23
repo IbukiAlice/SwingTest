@@ -1,5 +1,7 @@
 package swingtest.frame;
 
+import swingtest.tool.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
@@ -22,10 +24,22 @@ public class Page extends JFrame {
     public Page(){
         super("Page");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocation(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
         // 窗口布局
+        JScrollPane messageBox = new JScrollPane();
+        JTextArea message = new JTextArea(50, 50);
+        message.setEditable(false);
+        message.setLineWrap(true);
+        messageBox.setViewportView(message);
+        messageBox.getVerticalScrollBar().setToolTipText("hint");
+        ToolTipManager.sharedInstance().setInitialDelay(0);
+
+        getContentPane().add(messageBox);
+
+        Logger.setLogArea(message);
 
         pack();
+        setLocation(SCREEN_WIDTH / 2 - getPreferredSize().width / 2,
+            SCREEN_HEIGHT / 2 - getPreferredSize().height / 2);
     }
 }
