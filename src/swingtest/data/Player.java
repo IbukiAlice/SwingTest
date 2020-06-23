@@ -118,13 +118,13 @@ public class Player {
 
 		/*
 			防御计算公式:
-			格挡率 = 1 - 0.15 / (0.15 + 防御值) - 1 / ( 35 / 27 - 防御值 / 270)
+			格挡率 = 1 - 0.15 / (0.15 + 防御值) - 1 / ( 35 / 27 + 防御值 / 270)
 			保证1时格挡率10%, 100时39.8%, 1000时79.98%
 		 */
 		double realDamage = attackDamage;
 
-		if(isIgnoreDefense){
-			realDamage -= realDamage * (1 - 0.15 / (0.15 + defence.getValue()) - 1 / ( 35 / 27 - defence.getValue() / 270));
+		if(!isIgnoreDefense){
+			realDamage -= realDamage * (1 - 0.15 / (0.15 + defence.getValue()) - 1 / ( 35 / 27.0 + defence.getValue() / 270.0));
 		}
 
 		return (int) Math.ceil(realDamage);

@@ -1,11 +1,16 @@
 package swingtest.data.talenttree;
 
+import swingtest.data.PlayerData;
+
 import java.util.TreeMap;
 
 /**
  * 天赋树
  */
 public class TalentTree {
+
+	// 玩家数据, 用于回调, 以及获取玩家根骨
+	private final PlayerData playerData;
 
 	// 天赋树存储
 	private TreeMap<Integer, TalentNode> tree;
@@ -16,28 +21,26 @@ public class TalentTree {
 	// 天赋树节点数
 	private int treeNodeNum;
 
-	// 角色的根骨
-	private int[] talent;
+	// 最高的可用节点编号
+	private int highestAvailableNodeId;
 
 	// 是否有新的可选分支
 	private boolean newBranch;
 
-	// 是否有升级成功的节点
-	private boolean fullExpNode;
-
 	/**
 	 * 根据根骨初始化天赋树，创建初始节点
-	 * @param talent 根骨
+	 * @param playerData 玩家数据, 用于回调
 	 */
-	public TalentTree(int[] talent){
+	public TalentTree(final PlayerData playerData){
 		newBranch = false;
-		fullExpNode = false;
 		treeLevel = 1;
 		tree = new TreeMap<>();
-		this.talent = talent.clone();
+		this.playerData = playerData;
 
-		tree.put(1, new TalentNode(this.talent, treeLevel));
+		// 天赋树初始生成一个根节点
+		tree.put(1, new TalentNode(this.playerData.getTalent(), treeLevel));
 		treeNodeNum = 1;
+		highestAvailableNodeId = 1;
 		tree.get(1).setAvailable(true);
 	}
 
@@ -47,58 +50,73 @@ public class TalentTree {
 	public void generateTreeLevel(){
 		++treeLevel;
 
-		tree.put(++treeNodeNum, new TalentNode(talent, treeLevel));
-		tree.put(++treeNodeNum, new TalentNode(talent, treeLevel));
+		tree.put(++treeNodeNum, new TalentNode(playerData.getTalent(), treeLevel));
+		tree.put(++treeNodeNum, new TalentNode(playerData.getTalent(), treeLevel));
 	}
 
 	/**
-	 * 给最新的节点添加经验值
+	 * 给指定节点添加经验值
+	 * @param nodeId 节点编号
 	 * @param exp 经验值
 	 * @return 溢出经验值
 	 */
-	public int addExpToLastedNode(int exp){
+	public int addExpToNode(int exp, int nodeId){
 
-		if(newBranch){
-			// 还未选择新节点
+		TalentNode node = tree.get(nodeId);
+
+		if(node == null){
+			System.out.println("不存在的节点ID!");
 			return exp;
-		}
-
-		TalentNode node = tree.get(treeNodeNum);
-
-		if(node.isAvailable()){
-			node = tree.get(treeNodeNum - 1);
+		}else if(!node.isAvailable()){
+			System.out.println("该节点未激活!");
+			return exp;
 		}
 
 		int remainExp = node.addExp(exp);
 
-		if(node.isFullExp()){
+		if(node.isFullExp() && nodeId == highestAvailableNodeId){
 			// 生成新的天赋树
 			generateTreeLevel();
 
 			newBranch = true;
-			fullExpNode = true;
 		}
 
 		return remainExp;
 	}
 
 	/**
-	 * 获取满经验值节点的8项属性影响数组
-	 * @return 8项属性影响数组
+	 * 激活指定节点
+	 * @param nodeId 节点编号
+	 * @param isExtraActive 是否为额外激活动作(非正常升级激活)
+	 * @return 成功激活返回true
 	 */
-	public int[] getEffectOfFullExpNode(){
-		if(!fullExpNode){
-			return new int[8];
+	public boolean activeNode(int nodeId, boolean isExtraActive){
+		TalentNode node = tree.get(nodeId);
+
+		if(node == null){
+			System.out.println("节点不存在!");
+			return false;
 		}
-
-		fullExpNode = false;
-
-		TalentNode node = tree.get(treeNodeNum);
-
 		if(node.isAvailable()){
-			node = tree.get(treeNodeNum - 1);
+			System.out.println("节点已激活!");
+			return false;
 		}
 
-		return node.getEffects().clone();
+		// 判断是否为额外激活
+		if(isExtraActive){
+			node.setAvailable(true);
+		}
+		// 判断是否为激活新分支节点
+		else if(treeNodeNum <= 1 + nodeId && treeNodeNum > highestAvailableNodeId + 1){
+			highestAvailableNodeId = nodeId;
+			newBranch = false;
+			node.setAvailable(true);
+		}
+		else{
+			System.out.println("不允许激活该节点!");
+			return false;
+		}
+
+		return true;
 	}
 }

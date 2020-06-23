@@ -122,7 +122,9 @@ public class TalentNode {
 		return available;
 	}
 
-	protected boolean isFullExp(){return fullExp;}
+	protected boolean isFullExp(){
+		return fullExp;
+	}
 
 	protected void setAvailable(boolean available) {
 		this.available = available;

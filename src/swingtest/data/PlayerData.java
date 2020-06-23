@@ -31,6 +31,9 @@ public class PlayerData {
 
 	private int additionDefence;// 额外永久增加/减少防御
 
+	// 经验值
+	private int exp;
+
 	// 天赋树
 	private TalentTree talentTree;
 
@@ -48,7 +51,7 @@ public class PlayerData {
 		totalTalent -= talent[1];
 		talent[2] = r.nextInt(totalTalent) + 1;
 
-		talentTree = new TalentTree(talent);
+		talentTree = new TalentTree(this);
 
 		// 初始化属性(根据根骨)
 		strength = 1 + talent[0] / 10;
@@ -60,6 +63,8 @@ public class PlayerData {
 		additionDodge = 0;
 		additionHealth = 0;
 		additionDefence = 0;
+
+		exp = 0;
 	}
 
 	//----- Method -----
@@ -85,6 +90,7 @@ public class PlayerData {
 	}
 
 	//-----Getter & Setter -----
+	public int[] getTalent(){ return talent; }
 
 	public int getStrength() {
 		return strength;
