@@ -1,10 +1,11 @@
-package swingtest.frame;
+package frame;
 
-import swingtest.tool.Logger;
+import frame.panel.GamePanel;
+import frame.panel.TalentTreeTable;
+import tool.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Vector;
 
 /**
  * 主窗口
@@ -25,18 +26,8 @@ public class Page extends JFrame {
         super("Page");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 窗口布局
-        JScrollPane messageBox = new JScrollPane();
-        JTextArea message = new JTextArea(50, 50);
-        message.setEditable(false);
-        message.setLineWrap(true);
-        messageBox.setViewportView(message);
-        messageBox.getVerticalScrollBar().setToolTipText("hint");
-        ToolTipManager.sharedInstance().setInitialDelay(0);
-
-        getContentPane().add(messageBox);
-
-        Logger.setLogArea(message);
+        // 自定义面板，使显示界面尺寸符合设定尺寸
+        setContentPane(new GamePanel());
 
         pack();
         setLocation(SCREEN_WIDTH / 2 - getPreferredSize().width / 2,

@@ -1,4 +1,4 @@
-package swingtest.data.talenttree;
+package data.talenttree;
 
 import java.util.Random;
 
@@ -10,6 +10,8 @@ public class TalentNode {
 	private boolean available;	// 指示当前节点是否被点亮
 
 	private boolean fullExp;		// 指示当前节点是否满级
+
+	private boolean hasBranch;	// 指示当前节点是否有分支(或将来可能有)
 
 	private int currentExp;		// 当前经验值(显示时比上总经验值再换算成百分比)
 
@@ -31,6 +33,7 @@ public class TalentNode {
 	public TalentNode(int[] talent, int treeLevel){
 		available = false;
 		fullExp = false;
+		hasBranch = false;
 
 		Random r = new Random();
 		effects = new int[8];
@@ -118,17 +121,31 @@ public class TalentNode {
 		return fullExp ? currentExp - totalExp : 0;
 	}
 
-	protected boolean isAvailable(){
+	public boolean isAvailable(){
 		return available;
 	}
 
-	protected boolean isFullExp(){
+	public boolean isFullExp(){
 		return fullExp;
+	}
+
+	public boolean isHasBranch() {
+		return hasBranch;
+	}
+
+	public String getIntro(){
+		return intro;
+	}
+
+	protected void setHasBranch(boolean hasBranch) {
+		this.hasBranch = hasBranch;
 	}
 
 	protected void setAvailable(boolean available) {
 		this.available = available;
 	}
+
+
 
 	protected int[] getEffects(){return effects;}
 }

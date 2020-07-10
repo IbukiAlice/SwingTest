@@ -1,7 +1,8 @@
-package swingtest.data;
+package data;
 
 
-import swingtest.data.talenttree.TalentTree;
+import data.talenttree.TalentTree;
+import tool.Logger;
 
 import java.util.Random;
 
@@ -9,6 +10,8 @@ import java.util.Random;
  * 玩家数据(非战斗状态下的数据)
  */
 public class PlayerData {
+
+	private final Logger logger = Logger.getInstance();
 
 	// 根骨(除非特殊情况，否则不会发生变化)
 	private int[] talent;	// 根骨(天赋), 数值代表百分比, 表示三维成长速度(三者之和为300)
@@ -49,7 +52,7 @@ public class PlayerData {
 		totalTalent -= talent[0];
 		talent[1] = r.nextInt(totalTalent - 1) + 1;
 		totalTalent -= talent[1];
-		talent[2] = r.nextInt(totalTalent) + 1;
+		talent[2] = totalTalent;
 
 		talentTree = new TalentTree(this);
 
@@ -87,6 +90,28 @@ public class PlayerData {
 
 	public int getDefence(){
 		return additionDefence + endurance;
+	}
+
+	/**
+	 * 回调函数, 添加天赋节点的效果
+	 * @param effects 效果数组
+	 */
+	public void addEffects(int[] effects){
+
+		if(effects == null || effects.length != 8){
+			logger.warn("错误的effects数组!");
+			return;
+		}
+
+		strength 		+= effects[0];
+		agile 			+= effects[1];
+		endurance 		+= effects[2];
+
+		additionDamage	+= effects[3];
+		additionSpeed	+= effects[4];
+		additionDodge	+= effects[5];
+		additionHealth	+= effects[6];
+		additionDefence	+= effects[7];
 	}
 
 	//-----Getter & Setter -----

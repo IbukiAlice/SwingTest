@@ -1,4 +1,4 @@
-package swingtest.data;
+package data;
 
 import java.util.Random;
 

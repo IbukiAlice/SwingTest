@@ -1,4 +1,4 @@
-package swingtest.tool;
+package tool;
 
 import javax.swing.*;
 import java.time.LocalTime;
@@ -13,7 +13,7 @@ public class Logger {
 		return LoggerFactory.INSTANCE;
 	}
 
-	public static class LoggerFactory{
+	private static class LoggerFactory{
 		public static Logger INSTANCE = new Logger();
 	}
 
@@ -30,5 +30,9 @@ public class Logger {
 		}else{
 			System.out.println(str);
 		}
+	}
+
+	public void warn(String message){
+		System.out.println("[" + LocalTime.now() + "]" + message);
 	}
 }

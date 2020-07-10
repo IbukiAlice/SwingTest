@@ -1,10 +1,12 @@
-package swingtest.battle;
+package battle;
 
-import swingtest.data.Player;
-import swingtest.data.PlayerData;
-import swingtest.tool.Logger;
+import data.Player;
+import data.PlayerData;
+import tool.Logger;
 
 public class Battle {
+
+	private final Logger logger = Logger.getInstance();
 
 	private Player player;
 
@@ -27,7 +29,7 @@ public class Battle {
 				int damage = player.hitJudge(enemy.getDamage(), false);
 				player.reduceCurrentHealth(damage);
 
-				Logger.getInstance().log("Enemy damage:" + damage +
+				logger.log("Enemy damage:" + damage +
 					"---Player:" + player.getCurrentHealth() + "/" + player.getHealth());
 
 				if(player.judgeDeath()){
@@ -43,7 +45,7 @@ public class Battle {
 				int damage = enemy.hitJudge(player.getDamage(), false);
 				enemy.reduceCurrentHealth(damage);
 
-				Logger.getInstance().log("Player damage:" + damage +
+				logger.log("Player damage:" + damage +
 					"---Enemy:" + enemy.getCurrentHealth() + "/" + enemy.getHealth());
 
 				if(enemy.judgeDeath()){

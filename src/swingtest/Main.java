@@ -1,15 +1,11 @@
-package swingtest;
-
-import swingtest.battle.Battle;
-import swingtest.data.PlayerData;
-import swingtest.frame.Page;
+import frame.Page;
 
 public class Main {
 
     public static void main(String[] args) {
         new Page().setVisible(true);
 
-        PlayerData playerData = new PlayerData();
+        /*PlayerData playerData = new PlayerData();
         playerData.setStrength(137);
         playerData.setAgile(180);
         playerData.setEndurance(43);
@@ -20,6 +16,6 @@ public class Main {
         enemyData.setEndurance(155);
 
         Battle battle = new Battle(playerData, enemyData);
-        System.out.println(battle.startBattle());
+        System.out.println(battle.startBattle());*/
     }
 }

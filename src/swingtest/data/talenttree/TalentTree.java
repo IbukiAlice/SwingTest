@@ -1,6 +1,7 @@
-package swingtest.data.talenttree;
+package data.talenttree;
 
-import swingtest.data.PlayerData;
+import data.PlayerData;
+import tool.Logger;
 
 import java.util.TreeMap;
 
@@ -8,6 +9,8 @@ import java.util.TreeMap;
  * 天赋树
  */
 public class TalentTree {
+
+	private final Logger logger = Logger.getInstance();
 
 	// 玩家数据, 用于回调, 以及获取玩家根骨
 	private final PlayerData playerData;
@@ -24,7 +27,7 @@ public class TalentTree {
 	// 最高的可用节点编号
 	private int highestAvailableNodeId;
 
-	// 是否有新的可选分支
+	// 是否有新的可选分支(分支是否未激活)
 	private boolean newBranch;
 
 	/**
@@ -42,6 +45,7 @@ public class TalentTree {
 		treeNodeNum = 1;
 		highestAvailableNodeId = 1;
 		tree.get(1).setAvailable(true);
+		tree.get(1).setHasBranch(true);
 	}
 
 	/**
@@ -65,20 +69,29 @@ public class TalentTree {
 		TalentNode node = tree.get(nodeId);
 
 		if(node == null){
-			System.out.println("不存在的节点ID!");
+			logger.warn("节点不存在!");
 			return exp;
 		}else if(!node.isAvailable()){
-			System.out.println("该节点未激活!");
+			logger.warn("该节点未激活!");
+			return exp;
+		}else if(node.isFullExp()){
+			logger.warn("该节点已满级!");
 			return exp;
 		}
 
 		int remainExp = node.addExp(exp);
 
-		if(node.isFullExp() && nodeId == highestAvailableNodeId){
-			// 生成新的天赋树
-			generateTreeLevel();
+		if(node.isFullExp()){
 
-			newBranch = true;
+			// 回调玩家数据, 将节点效果加给玩家
+			playerData.addEffects(node.getEffects());
+
+			if(nodeId == highestAvailableNodeId) {
+				// 生成新的天赋树
+				generateTreeLevel();
+
+				newBranch = true;
+			}
 		}
 
 		return remainExp;
@@ -94,11 +107,11 @@ public class TalentTree {
 		TalentNode node = tree.get(nodeId);
 
 		if(node == null){
-			System.out.println("节点不存在!");
+			logger.warn("节点不存在!");
 			return false;
 		}
 		if(node.isAvailable()){
-			System.out.println("节点已激活!");
+			logger.warn("节点已激活!");
 			return false;
 		}
 
@@ -106,14 +119,15 @@ public class TalentTree {
 		if(isExtraActive){
 			node.setAvailable(true);
 		}
-		// 判断是否为激活新分支节点
-		else if(treeNodeNum <= 1 + nodeId && treeNodeNum > highestAvailableNodeId + 1){
+		// 判断是否为激活新分支节点(未激活的顶部两个新的分支节点之一)
+		else if(treeNodeNum < 2 + nodeId && newBranch){
 			highestAvailableNodeId = nodeId;
 			newBranch = false;
 			node.setAvailable(true);
+			node.setHasBranch(true);
 		}
 		else{
-			System.out.println("不允许激活该节点!");
+			logger.warn("不允许激活该节点!");
 			return false;
 		}
 
