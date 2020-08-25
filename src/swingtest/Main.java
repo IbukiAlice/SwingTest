@@ -17,5 +17,7 @@ public class Main {
 
         Battle battle = new Battle(playerData, enemyData);
         System.out.println(battle.startBattle());*/
+
+        System.out.println("No BugTest.");
     }
 }
